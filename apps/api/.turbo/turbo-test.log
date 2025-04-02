@@ -1,0 +1,15 @@
+
+> api@0.0.1 test
+> jest
+
+PASS src/app.controller.spec.ts (11.759 s)
+PASS src/test/auth.service.spec.ts (11.922 s)
+PASS src/test/auth.register.service.spec.ts (11.967 s)
+PASS src/test/auth.register.controller.spec.ts (12.365 s)
+PASS src/test/auth.controller.spec.ts (12.35 s)
+
+Test Suites: 5 passed, 5 total
+Tests:       11 passed, 11 total
+Snapshots:   0 total
+Time:        13.193 s, estimated 14 s
+Ran all test suites.

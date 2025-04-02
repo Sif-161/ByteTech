@@ -11,6 +11,9 @@
             "outputs": [
                 "dist/"
             ]
+        },
+        "test": {
+            "outputs": []
         }
     }
   }

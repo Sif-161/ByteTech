@@ -1,4 +1,6 @@
-import { Button, Form, Input, Select, Checkbox } from 'antd';
+import { Button, Form, Input, Select, Checkbox, message } from 'antd';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const { Option } = Select;
 
@@ -26,11 +28,41 @@ const tailFormItemLayout = {
     },
 };
 
-const App: React.FC = () => {
+const Register: React.FC = () => {
     const [form] = Form.useForm();
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    //função para enviar para o back
+    const onFinish = async (values: any) => {
+        console.log('form values: ', values);
+        setLoading(true);
+        try {
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    fullName: values.fullName,
+                    email: values.email,
+                    password: values.password,
+                    phone: `+${values.prefix}${values.phone}`,
+                }),
+            });
 
-    const onFinish = (values: any) => {
-        console.log('Received values of form: ', values);
+            const data = await response.json();
+            if (response.ok) {
+                message.success("Usuário cadastrado com sucesso!");
+                console.log("Usuário cadastrado:", data);
+                form.resetFields();
+                navigate('/login');
+            } else {
+                throw new Error('Erro ao cadastrar usuário');
+            }
+        } catch (error) {
+            message.error("Erro ao cadastrar usuário. tente novamente!");
+            console.error("Erro:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const prefixSelector = (
@@ -42,108 +74,112 @@ const App: React.FC = () => {
     );
 
     return (
-        <Form
-            {...formItemLayout}
-            form={form}
-            name="register"
-            onFinish={onFinish}
-            initialValues={{ prefix: '75' }}
-            style={{ maxWidth: 600 }}
-            scrollToFirstError
-        >
-            <Form.Item
-                name="fullName"
-                label="Nome Completo"
-                rules={[{ required: true, message: 'Por favor, insira seu nome completo!', whitespace: true }]}
-            >
-                <Input />
-            </Form.Item>
+        <div className='container'>
+            <div className='container-content'>
+                <Form
+                    {...formItemLayout}
+                    form={form}
+                    name="register"
+                    onFinish={onFinish}
+                    initialValues={{ prefix: '75' }}
+                    style={{ maxWidth: 600 }}
+                    scrollToFirstError
+                >
+                    <Form.Item
+                        name="fullName"
+                        label="Nome Completo"
+                        rules={[{ required: true, message: 'Por favor, insira seu nome completo!', whitespace: true }]}
+                    >
+                        <Input />
+                    </Form.Item>
 
-            <Form.Item
-                name="email"
-                label="E-mail"
-                rules={[
-                    {
-                        type: 'email',
-                        message: 'Esse e-mail não é valido!',
-                    },
-                    {
-                        required: true,
-                        message: 'Por favor, insira seu e-mail!',
-                    },
-                ]}
-            >
-                <Input />
-            </Form.Item>
+                    <Form.Item
+                        name="email"
+                        label="E-mail"
+                        rules={[
+                            {
+                                type: 'email',
+                                message: 'Esse e-mail não é valido!',
+                            },
+                            {
+                                required: true,
+                                message: 'Por favor, insira seu e-mail!',
+                            },
+                        ]}
+                    >
+                        <Input />
+                    </Form.Item>
 
-            <Form.Item
-                name="password"
-                label="Senha"
-                rules={[
-                    {
-                        required: true,
-                        message: 'Por favor, insira sua senha!',
-                    },
-                ]}
-                hasFeedback
-            >
-                <Input.Password />
-            </Form.Item>
+                    <Form.Item
+                        name="password"
+                        label="Senha"
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Por favor, insira sua senha!',
+                            },
+                        ]}
+                        hasFeedback
+                    >
+                        <Input.Password />
+                    </Form.Item>
 
-            <Form.Item
-                name="confirm"
-                label="Confirme a senha"
-                dependencies={['password']}
-                hasFeedback
-                rules={[
-                    {
-                        required: true,
-                        message: 'Por favor, confirme sua senha!',
-                    },
-                    ({ getFieldValue }) => ({
-                        validator(_, value) {
-                            if (!value || getFieldValue('password') === value) {
-                                return Promise.resolve();
-                            }
-                            return Promise.reject(new Error('A senha que você digitou não corresponde!'));
-                        },
-                    }),
-                ]}
-            >
-                <Input.Password />
-            </Form.Item>
+                    <Form.Item
+                        name="confirm"
+                        label="Confirme a senha"
+                        dependencies={['password']}
+                        hasFeedback
+                        rules={[
+                            {
+                                required: true,
+                                message: 'Por favor, confirme sua senha!',
+                            },
+                            ({ getFieldValue }) => ({
+                                validator(_, value) {
+                                    if (!value || getFieldValue('password') === value) {
+                                        return Promise.resolve();
+                                    }
+                                    return Promise.reject(new Error('A senha que você digitou não corresponde!'));
+                                },
+                            }),
+                        ]}
+                    >
+                        <Input.Password />
+                    </Form.Item>
 
-            <Form.Item
-                name="phone"
-                label="Número de telefone"
-                rules={[{ required: true, message: 'Por favor, insira seu número de telefone!' }]}
-            >
-                <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
-            </Form.Item>
+                    <Form.Item
+                        name="phone"
+                        label="Número de telefone"
+                        rules={[{ required: true, message: 'Por favor, insira seu número de telefone!' }]}
+                    >
+                        <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
+                    </Form.Item>
 
-            <Form.Item
-                name="agreement"
-                valuePropName="checked"
-                rules={[
-                    {
-                        validator: (_, value) =>
-                            value ? Promise.resolve() : Promise.reject(new Error('Voce precisa aceitar o acordo')),
-                    },
-                ]}
-                {...tailFormItemLayout}
-            >
-                <Checkbox>
-                    Eu li o <a href="">agreement</a>
-                </Checkbox>
-            </Form.Item>
+                    <Form.Item
+                        name="agreement"
+                        valuePropName="checked"
+                        rules={[
+                            {
+                                validator: (_, value) =>
+                                    value ? Promise.resolve() : Promise.reject(new Error('Voce precisa aceitar o acordo')),
+                            },
+                        ]}
+                        {...tailFormItemLayout}
+                    >
+                        <Checkbox>
+                            Eu li o <a href="">agreement</a>
+                        </Checkbox>
+                    </Form.Item>
 
-            <Form.Item {...tailFormItemLayout}>
-                <Button type="primary" htmlType="submit">
-                    Cadastre-se
-                </Button>
-            </Form.Item>
-        </Form>
+                    <Form.Item {...tailFormItemLayout}>
+                        <Button type="primary" htmlType="submit" loading={loading}>
+                            {loading ? "Cadastrando..." : "Cadastre-se"}
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </div>
+        </div>
     );
 };
 
-export default App;
+export default Register;

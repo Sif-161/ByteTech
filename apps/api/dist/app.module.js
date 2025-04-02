@@ -12,6 +12,9 @@ const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const serve_static_1 = require("@nestjs/serve-static");
 const path_1 = require("path");
+const auth_module_1 = require("./auth/auth.module");
+const auth_controller_1 = require("./auth/auth.controller");
+const firebase_module_1 = require("./firebase/firebase.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -20,9 +23,11 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             serve_static_1.ServeStaticModule.forRoot({
                 rootPath: (0, path_1.join)(__dirname, '../../', 'client/dist'),
-            })
+            }),
+            auth_module_1.AuthModule,
+            firebase_module_1.FirebaseModule,
         ],
-        controllers: [app_controller_1.AppController],
+        controllers: [app_controller_1.AppController, auth_controller_1.AuthController],
         providers: [app_service_1.AppService],
     })
 ], AppModule);
