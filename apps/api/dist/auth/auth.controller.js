@@ -36,7 +36,7 @@ let AuthController = class AuthController {
     }
     async register(registerDto) {
         const user = await this.authService.register(registerDto);
-        return { message: 'Usuário registrado com sucesso', user };
+        return { message: 'Usuário cadastrado com sucesso', user };
     }
 };
 exports.AuthController = AuthController;

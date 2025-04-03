@@ -1,0 +1,62 @@
+.ant-table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.ant-table-cell {
+    padding: 12px 16px;
+}
+
+.product-name {
+    white-space: normal;
+    word-wrap: break-word;
+    line-height: 1.4;
+    font-size: 14px;
+}
+
+.product-name div {
+    margin-bottom: 2px;
+}
+
+.product-price {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.product-quantity {
+    font-weight: 500;
+    color: #52c41a;
+}
+
+.product-quantity.low-stock {
+    color: #faad14;
+}
+
+.custom-tag {
+    margin-right: 4px;
+}
+
+.ant-spin-nested-loading {
+    min-height: 200px;
+}
+
+.ant-dropdown-trigger {
+    padding: 0 8px;
+}
+
+.table-actions a:last-child {
+    margin-right: 0;
+    color: #ff4d4f;
+}
+.ant-dropdown-menu {
+    min-width: 120px;
+}
+
+.ant-table-tbody > tr > td {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.ant-table-thead > tr > th,
+.ant-table-tbody > tr > td {
+  padding: 12px 8px;
+}

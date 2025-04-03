@@ -6,6 +6,8 @@ import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
 import { FirebaseModule } from './firebase/firebase.module';
+import { ProductsModule } from "./products/products.module";
+import { ProductsController } from "./products/products.controller";
 
 @Module({
   imports: [
@@ -14,8 +16,9 @@ import { FirebaseModule } from './firebase/firebase.module';
     }),
     AuthModule,
     FirebaseModule,
+    ProductsModule,
   ],
-  controllers: [AppController, AuthController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

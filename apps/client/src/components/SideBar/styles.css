@@ -1,0 +1,70 @@
+.custom-sider {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.demo-logo-vertical {
+  height: 32px;
+  margin: 16px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.collapse-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100% !important;
+  height: 64px;
+  background: transparent;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.collapse-button {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
+.collapse-button .anticon {
+  color: rgba(255, 255, 255, 0.65) !important;
+  transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
+
+  &:hover,
+  &:active,
+  &:focus {
+    color: inherit !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+}
+
+.collapse-button:hover .anticon {
+  color: rgba(255, 255, 255, 0.9) !important;
+  transform: scale(1.05);
+}
+
+.anticon-menu-fold,
+.anticon-menu-unfold {
+  svg {
+    display: block;
+    pointer-events: none;
+  }
+}
+
+.ant-btn {
+  padding: 0 !important;
+}

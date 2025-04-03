@@ -29,13 +29,13 @@ let AuthService = class AuthService {
                 phoneNumber: phone,
             });
             return {
-                message: "Usuário registrado com sucesso",
+                message: "Usuário cadastrado com sucesso",
                 uid: userRecord.uid,
                 email: userRecord.email,
             };
         }
         catch (error) {
-            throw new Error("Erro ao registrar usuário: " + error.message);
+            throw new Error("Erro ao cadastrar usuário: " + error.message);
         }
     }
 };
