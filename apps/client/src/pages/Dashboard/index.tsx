@@ -6,12 +6,11 @@ import './styles.css';
 
 const { Header, Content } = Layout;
 
-// Definimos um tipo para as chaves válidas
 type MenuKey = '1' | '2' | '3';
 
 const Dashboard: React.FC = () => {
   const [collapsed, setCollapsed] = useState(true);
-  const [activeKey, setActiveKey] = useState<MenuKey>('1'); // Especificamos o tipo aqui
+  const [activeKey, setActiveKey] = useState<MenuKey>('1');
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();

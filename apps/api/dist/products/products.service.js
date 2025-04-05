@@ -40,6 +40,15 @@ let ProductsService = class ProductsService {
         const docRef = await this.db.collection('products').add(productData);
         return { id: docRef.id, ...productData };
     }
+    async update(id, updateProductDto) {
+        const productRef = this.db.collection('products').doc(id);
+        const updateData = {
+            ...updateProductDto,
+            updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        };
+        await productRef.update(updateData);
+        return { id, ...updateData };
+    }
 };
 exports.ProductsService = ProductsService;
 exports.ProductsService = ProductsService = __decorate([

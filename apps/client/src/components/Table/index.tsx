@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Table, Tag, Dropdown, Button, Spin, message } from 'antd';
 import type { MenuProps, TableProps } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
+import DeleteProductModal from "../DeleteModal";
+import EditProductModal from '../EditModal';
+import { ProductService } from '../../services/productService';
 import './styles.css';
 
 interface ProductType {
@@ -15,49 +18,71 @@ interface ProductType {
 const DataTable: React.FC = () => {
   const [data, setData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState<boolean>(true)
+  const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
+  const [productToDelete, setProductToDelete] = useState<ProductType | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const [currentProduct, setCurrentProduct] = useState<any>(null);
+  const [saveLoading, setSaveLoading] = useState<boolean>(false);
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
+  const handleEditClick = (product: ProductType) => {
+    setCurrentProduct(product);
+    setEditModalOpen(true);
+  };
+
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/products');
-
-      console.log('Status:', response.status);
-      console.log('Content-Type:', response.headers.get('content-type'));
-
-      const text = await response.text();
-      console.log('Raw response:', text);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      if (response.headers.get('content-type')?.includes('application/json')) {
-        const products = JSON.parse(text);
-        setData(products);
-      } else {
-        throw new Error('Resposta não é JSON');
-      }
-
-    } catch (error) {
-      message.error('Erro ao carregar produtos');
-      console.error('Error fetching products:', error);
+      const products = await ProductService.getAll();
+      setData(products);
     } finally {
       setLoading(false);
     }
   };
 
+  const deleteProduct = async (productId: string) => {
+    try {
+      setDeleteLoading(true);
+      await ProductService.delete(productId);
+      setDeleteModalOpen(false);
+      await fetchProducts();
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
+  const showDeleteConfirm = (product: ProductType) => {
+    setProductToDelete(product);
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (productToDelete) {
+      await deleteProduct(productToDelete.id);
+    }
+  };
+
+  const saveProduct = async (values: any) => {
+    try {
+      setSaveLoading(true);
+      await ProductService.update(currentProduct.id, values);
+      setEditModalOpen(false);
+      await fetchProducts();
+    } finally {
+      setSaveLoading(false);
+    }
+  }
+
   const handleMenuClick = async (record: ProductType, key: string) => {
     try {
       if (key === 'edit') {
-        console.log('Editar:', record);
-        // Lógica de edição aqui
+        handleEditClick(record);
       } else if (key === 'delete') {
-        console.log('Excluir:', record);
-        // Lógica de exclusão aqui
+        showDeleteConfirm(record);
       }
     } catch (error) {
       message.error('Erro ao executar ação');
@@ -138,12 +163,30 @@ const DataTable: React.FC = () => {
   ];
 
   return (
-    <Spin spinning={loading}>
-      <Table<ProductType>
-        columns={columns}
-        dataSource={data.map(item => ({ ...item, key: item.id }))}
+    <>
+      <Spin spinning={loading}>
+        <Table<ProductType>
+          columns={columns}
+          dataSource={data.map(item => ({ ...item, key: item.id }))}
+        />
+      </Spin>
+
+      <DeleteProductModal
+        open={deleteModalOpen}
+        product={productToDelete}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteModalOpen(false)}
+        loading={deleteLoading}
       />
-    </Spin>
+
+      <EditProductModal
+        open={editModalOpen}
+        onCancel={() => setEditModalOpen(false)}
+        onSave={saveProduct}
+        initialValues={currentProduct}
+        loading={saveLoading}
+      />
+    </>
   );
 };
 export default DataTable;

@@ -1,6 +1,8 @@
-import { Button, Form, Input, Select, Checkbox, message } from 'antd';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Button, Form, Input, Select, Checkbox} from 'antd';
+import { AuthService } from '../../services/authService';
+import './styles.css';
 
 const { Option } = Select;
 
@@ -32,38 +34,24 @@ const Register: React.FC = () => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    //função para enviar para o back
+
     const onFinish = async (values: any) => {
-        console.log('form values: ', values);
         setLoading(true);
         try {
-            const response = await fetch('/api/auth/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    fullName: values.fullName,
-                    email: values.email,
-                    password: values.password,
-                    phone: `+${values.prefix}${values.phone}`,
-                }),
+            await AuthService.register({
+                fullName: values.fullName,
+                email: values.email,
+                password: values.password,
+                phone: `+${values.prefix}${values.phone}`,
             });
-
-            const data = await response.json();
-            if (response.ok) {
-                message.success("Usuário cadastrado com sucesso!");
-                console.log("Usuário cadastrado:", data);
-                form.resetFields();
-                navigate('/login');
-            } else {
-                throw new Error('Erro ao cadastrar usuário');
-            }
+            form.resetFields();
+            navigate('/login');
         } catch (error) {
-            message.error("Erro ao cadastrar usuário. tente novamente!");
-            console.error("Erro:", error);
+            console.error("Erro no registro:", error);
         } finally {
             setLoading(false);
         }
-    };
+    }
 
     const prefixSelector = (
         <Form.Item name="prefix" noStyle>

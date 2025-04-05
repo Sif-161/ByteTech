@@ -1,51 +1,26 @@
-import React from 'react';
-import { useState } from 'react';
-import { auth } from "../../firebase";
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import React, { useState } from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Flex } from 'antd';
-import './styles.css';
-import logo from '../../assets/logo.png'
+import { AuthService } from "../../services/authService";
 import { Link, useNavigate } from 'react-router-dom';
+import logo from '../../assets/logo.png'
+import './styles.css';
 
-const App: React.FC = () => {
+const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const onFinish = async (values: { email: string; password: string }) => {
-    console.log('Form Values:', values);
     setLoading(true);
     try {
-      //Autenticação com Firebase
-      const userCredential = await signInWithEmailAndPassword(
-        auth, 
-        values.email, 
-        values.password
-      );
-      // token do firebase
-      const token = await userCredential.user.getIdToken();
-
-      //evia o token para o back
-      const response = await fetch('/api/auth/verify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        navigate('/dashboard');
-      }else{
-        alert("Erro ao autenticar:" + data.message);
-      }
+      await AuthService.login(values.email, values.password);
+      navigate('/dashboard');
     } catch (error) {
-      alert(error)
-      alert("Credenciais inválidas!");
-    } finally{
+      console.error('Login error:', error);
+    } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
     <div className='container'>
@@ -91,4 +66,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default Login;
