@@ -1,6 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
-import { ProductsService } from "../products/products.service";
-import { CreateProductDto } from "../products/dto/create.product.dto";
+import { ProductsService } from "../../products/products.service";
+import { CreateProductDto } from "../../products/dto/create.product.dto";
 import * as admin from "firebase-admin";
 
 // Mock do firestore

@@ -1,15 +1,14 @@
-import { Test, TestingModule } from '@nestjs/testing'
-import { AuthController } from '../auth/auth.controller'
-import { AuthService } from '../auth/auth.service';
-import { RegisterDto } from '../auth/dto/register.dto';
+import { Test, TestingModule } from '@nestjs/testing';
+import { AuthController } from '../../auth/auth.controller';
+import { AuthService } from '../../auth/auth.service';
+import { RegisterDto } from '../../auth/dto/register.dto';
 
-// Testes feitos para verificar as rotas e status http do /register
-
-describe('AuthController - Registro', () => {
+// Testes feitos para verificar as rotas e status http do /verify
+describe('AuthController', () => {
     let authController: AuthController;
     let authService: AuthService;
 
-    // Dados mockados para teste
+    // Dados mockados para teste de registro
     const mockUserData: RegisterDto = {
         email: 'teste@exemplo.com',
         password: 'Senha@123',
@@ -30,15 +29,49 @@ describe('AuthController - Registro', () => {
                 {
                     provide: AuthService,
                     useValue: {
+                        verifyToken: jest.fn().mockResolvedValue({ uid: 'user123' }),
                         register: jest.fn().mockResolvedValue(mockUserResponse),
                     },
                 },
             ],
         }).compile();
-
         authController = module.get<AuthController>(AuthController);
         authService = module.get<AuthService>(AuthService);
     });
+
+    // ==========================================
+    // TESTES PARA VERIFICAÇÃO DE TOKEN (/verify)
+    // ==========================================
+
+    /* Cria uma requisisão falsa com um token válido e verifica 
+    se o método verifyToken do AuthService é chamado com o token correto.*/
+    // @autor: Odilon
+    // @data: 28/03/2025
+    it('Deve autenticar um usuário com um token válido', async () => {
+        // MONTAGEM DE CENARIO
+        const request = { headers: {authorization: 'Bearer valid-token' } };
+
+        // EXECUÇÃO
+        const response = await authController.verifyToken(request);
+
+        // VERIFICAÇÃO
+        expect(response).toEqual({ message: 'Usuário autenticado', user: { uid: 'user123' } });
+    });
+
+    // Cria uma requisisão falsa sem um token e verifica se o método verifyToken do AuthService lança um erro.
+    // @autor: Odilon
+    // @data: 28/03/2025
+    it('Deve retornar erro se o token não for enciado', async () => {
+        //MONTAGEM DE CENARIO
+        const request = { headers: {} };
+
+        // EXECUÇÃO E VERIFICAÇÃO
+        await expect(authController.verifyToken(request)).rejects.toThrow('Token não fornecido');
+    });
+
+    // ==========================================
+    // TESTES PARA REGISTRO DE USUÁRIO (/register)
+    // ==========================================
 
     // Teste para registro bem-sucedido
     // @autor: Odilon

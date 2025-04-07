@@ -1,4 +1,3 @@
-// src/firebase/firebase.module.ts
 import { Module, Global } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import * as serviceAccount from '../config/firebase-service-account.json';
