@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsNumber, IsArray } from "class-validator";
+import { IsOptional, IsString, IsNumber, IsArray, IsUrl} from "class-validator";
 
 export class UpdateProductDto {
     @IsOptional()
@@ -15,5 +15,10 @@ export class UpdateProductDto {
 
     @IsOptional()
     @IsArray()
+    @IsString({ each: true })
     categories?: string[];
+
+    @IsOptional()
+    @IsUrl()
+    image?: string;
 }

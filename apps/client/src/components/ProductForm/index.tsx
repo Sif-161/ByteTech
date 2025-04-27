@@ -1,35 +1,50 @@
 import React from "react";
-import { PlusOutlined } from "@ant-design/icons";
-import { Button, Form, InputNumber, Upload, Space, Input } from "antd";
+import { Button, Form, InputNumber, Space, Input, message } from "antd";
 import "./style.css"
 
-const normFile = (e: any) => {
-    if (Array.isArray(e)) {
-        return e;
-    }
-    return e?.fileList;
-};
-
-interface ProductEditFormProps {
+interface ProductFormProps {
     initialValues?: any;
     onSave: (values: any) => void;
     onCancel: () => void;
     loading?: boolean;
+    isCreating?: boolean;
 }
 
-const ProductEditForm: React.FC<ProductEditFormProps> = ({
+const ProductForm: React.FC<ProductFormProps> = ({
     initialValues,
     onSave,
     onCancel,
     loading = false,
+    isCreating = false,
 }) => {
     const [form] = Form.useForm();
 
     React.useEffect(() => {
+        form.resetFields();
         if (initialValues) {
-            form.setFieldsValue(initialValues);
+            form.setFieldsValue({
+                ...initialValues,
+                categories: initialValues.categories?.join(', ') || ''
+            });
         }
     }, [initialValues, form]);
+
+    const handleSubmit = (values: any) => {
+        const processedValues = {
+            ...values,
+            categories: values.categories
+                .split(',')
+                .map((cat: string) => cat.trim())
+                .filter((cat: string) => cat.length > 0)
+        };
+
+        if (processedValues.categories.length === 0) {
+            message.error('Por favor, insira pelo menos uma categoria');
+            return;
+        }
+
+        onSave(processedValues);
+    }
 
     return (
         <Form
@@ -37,8 +52,12 @@ const ProductEditForm: React.FC<ProductEditFormProps> = ({
             labelCol={{ span: 6 }}
             wrapperCol={{ span: 14 }}
             layout="horizontal"
-            onFinish={onSave}
-            initialValues={initialValues}
+            onFinish={handleSubmit}
+            initialValues={{
+                image: '',
+                categories: '',
+                ...initialValues
+            }}
         >
             <Form.Item
                 label="Nome do Produto"
@@ -68,13 +87,14 @@ const ProductEditForm: React.FC<ProductEditFormProps> = ({
             </Form.Item>
 
             <Form.Item
-                label="Quantidade"
+                label="Quantidade em Estoque"
                 name="quantity"
                 rules={[{ required: true, message: 'Por favor, insira a quantidade' }]}
             >
                 <InputNumber
                     style={{ width: '100%' }}
                     min={0}
+                    precision={0}
                 />
             </Form.Item>
 
@@ -82,26 +102,24 @@ const ProductEditForm: React.FC<ProductEditFormProps> = ({
                 label="Categorias"
                 name="categories"
                 rules={[{ required: true, message: 'Por favor, insira pelo menos uma categoria' }]}
+                extra="Separe múltiplas categorias por vírgula"
             >
-                <Input placeholder="Separe múltiplas categorias por vírgula" />
+                <Input
+                    placeholder="Ex: Hardware, Processadores"
+                    defaultValue={initialValues?.categories?.join(', ')}
+                />
             </Form.Item>
 
             <Form.Item
                 label="Imagem do Produto"
                 name="image"
-                valuePropName="fileList"
-                getValueFromEvent={normFile}
+                rules={[{ 
+                    type: 'url',
+                    required: true, 
+                    message: 'Por favor, insira uma URL válida',
+                }]}
             >
-                <Upload
-                    listType="picture-card"
-                    maxCount={1}
-                    beforeUpload={() => false}
-                >
-                    <div>
-                        <PlusOutlined />
-                        <div style={{ marginTop: 8 }}>Adicionar Imagem</div>
-                    </div>
-                </Upload>
+                <Input placeholder="https://exemplo.com/imagem.jpg" />
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 6, span: 14 }}>
@@ -109,8 +127,12 @@ const ProductEditForm: React.FC<ProductEditFormProps> = ({
                     <Button onClick={onCancel}>
                         Cancelar
                     </Button>
-                    <Button type="primary" htmlType="submit" loading={loading}>
-                        Salvar Alterações
+                    <Button
+                        type="primary"
+                        htmlType="submit"
+                        loading={loading}
+                    >
+                        {isCreating ? 'Criar Produto' : 'Salvar Alterações'}
                     </Button>
                 </Space>
             </Form.Item>
@@ -118,4 +140,4 @@ const ProductEditForm: React.FC<ProductEditFormProps> = ({
     );
 };
 
-export default ProductEditForm;
+export default ProductForm;

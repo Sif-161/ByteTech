@@ -30,7 +30,7 @@ export class ProductsController {
     }
 
     @Delete(':id')
-    @HttpCode(HttpStatus.NO_CONTENT)
+    @HttpCode(HttpStatus.OK)
     async remove(@Param('id') id: string) {
         return this.productsService.remove(id);
     }
@@ -38,7 +38,7 @@ export class ProductsController {
     @Put(':id')
     @HttpCode(HttpStatus.OK)
     async update(
-        @Param('id', ParseUUIDPipe) id: string,
+        @Param('id') id: string,
         @Body() updateProductDto: UpdateProductDto
     ) {
         return this.productsService.update(id, updateProductDto);

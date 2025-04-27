@@ -1,12 +1,13 @@
 import { message } from "antd";
 import { apiRequest } from "../utils/apiUtils";
 
-interface ProductType {
+export interface ProductType {
     id: string;
     name: string;
     price: number;
     categories: string[];
     quantity: number;
+    image: string;
 }
 
 export const ProductService = {
@@ -54,9 +55,13 @@ export const ProductService = {
 
     async delete (id: string): Promise<void> {
         try {
-            await apiRequest<void>(`/products/${id}`, {
+            const response = await apiRequest<{success: boolean}>(`/products/${id}`, {
                 method: 'DELETE',
             });
+
+            if (response.success) {
+                message.success('Produto deletado com sucesso');
+            }
         } catch (error) {
             message.error('Falha ao deletar produto');
             throw error;

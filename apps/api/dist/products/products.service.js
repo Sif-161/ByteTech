@@ -35,19 +35,45 @@ let ProductsService = class ProductsService {
             quantity: Number(product.quantity),
             categories: Array.isArray(product.categories)
                 ? product.categories
-                : [product.categories]
+                : [product.categories],
+            image: product.image || null,
         };
         const docRef = await this.db.collection('products').add(productData);
         return { id: docRef.id, ...productData };
     }
     async update(id, updateProductDto) {
         const productRef = this.db.collection('products').doc(id);
-        const updateData = {
-            ...updateProductDto,
-            updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        const doc = await productRef.get();
+        if (!doc.exists) {
+            throw new Error('Product not found');
+        }
+        const updateData = {};
+        if (updateProductDto.price !== undefined) {
+            updateData.price = Number(updateProductDto.price);
+        }
+        if (updateProductDto.quantity !== undefined) {
+            updateData.quantity = Number(updateProductDto.quantity);
+        }
+        if (updateProductDto.categories !== undefined) {
+            updateData.categories = Array.isArray(updateProductDto.categories)
+                ? updateProductDto.categories
+                : [updateProductDto.categories];
+        }
+        if (updateProductDto.image !== undefined) {
+            updateData.image = updateProductDto.image;
+        }
+        updateData.updatedAt = admin.firestore.FieldValue.serverTimestamp();
+        if (Object.keys(updateData).length > 1) {
+            await productRef.update(updateData);
+        }
+        else {
+            console.warn('Nenhum dado válido para atualização foi fornecido');
+        }
+        const updatedDoc = await productRef.get();
+        return {
+            id,
+            ...updatedDoc.data(),
         };
-        await productRef.update(updateData);
-        return { id, ...updateData };
     }
 };
 exports.ProductsService = ProductsService;

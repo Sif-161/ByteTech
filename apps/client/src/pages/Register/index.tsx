@@ -143,7 +143,7 @@ const Register: React.FC = () => {
                         <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
                     </Form.Item>
 
-                    <Form.Item
+                    {/* <Form.Item
                         name="agreement"
                         valuePropName="checked"
                         rules={[
@@ -157,7 +157,7 @@ const Register: React.FC = () => {
                         <Checkbox>
                             Eu li o <a href="">agreement</a>
                         </Checkbox>
-                    </Form.Item>
+                    </Form.Item> */}
 
                     <Form.Item {...tailFormItemLayout}>
                         <Button type="primary" htmlType="submit" loading={loading}>

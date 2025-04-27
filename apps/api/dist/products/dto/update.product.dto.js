@@ -16,6 +16,7 @@ class UpdateProductDto {
     price;
     quantity;
     categories;
+    image;
 }
 exports.UpdateProductDto = UpdateProductDto;
 __decorate([
@@ -36,6 +37,12 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsString)({ each: true }),
     __metadata("design:type", Array)
 ], UpdateProductDto.prototype, "categories", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsUrl)(),
+    __metadata("design:type", String)
+], UpdateProductDto.prototype, "image", void 0);
 //# sourceMappingURL=update.product.dto.js.map

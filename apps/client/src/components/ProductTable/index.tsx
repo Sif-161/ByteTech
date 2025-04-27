@@ -1,37 +1,72 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Tag, Dropdown, Button, Spin, message } from 'antd';
+import { Table, Tag, Dropdown, Button, Spin, message, Image } from 'antd';
 import type { MenuProps, TableProps } from 'antd';
-import { EllipsisOutlined } from '@ant-design/icons';
+import { EllipsisOutlined, EyeOutlined } from '@ant-design/icons';
 import DeleteProductModal from "../DeleteModal";
-import EditProductModal from '../EditModal';
-import { ProductService } from '../../services/productService';
+import ProductModal from '../ProductModal';
+import { ProductService, ProductType } from '../../services/productService';
 import './styles.css';
 
-interface ProductType {
-  id: string;
-  name: string;
-  price: number;
-  categories: string[];
-  quantity: number;
+
+interface DataTableProps {
+  createModalOpen?: boolean;
+  onCreateModalClose?: () => void;
 }
 
-const DataTable: React.FC = () => {
+const DataTable: React.FC<DataTableProps> = ({
+  createModalOpen = false,
+  onCreateModalClose
+}) => {
   const [data, setData] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState<boolean>(true)
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
   const [productToDelete, setProductToDelete] = useState<ProductType | null>(null);
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
-  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState<any>(null);
+  const [isCreating, setIsCreating] = useState(false);
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    if (createModalOpen) {
+      setIsCreating(true);
+      setIsModalOpen(true);
+      setCurrentProduct(null);
+    }
+  }, [createModalOpen]);
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    onCreateModalClose?.();
+  };
+
   const handleEditClick = (product: ProductType) => {
     setCurrentProduct(product);
-    setEditModalOpen(true);
+    setIsCreating(false);
+    setIsModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (productToDelete) {
+      await deleteProduct(productToDelete.id);
+    }
+  };
+
+  const handleMenuClick = async (record: ProductType, key: string) => {
+    try {
+      if (key === 'edit') {
+        handleEditClick(record);
+      } else if (key === 'delete') {
+        showDeleteConfirm(record);
+      }
+    } catch (error) {
+      message.error('Erro ao executar ação');
+      console.error('Error:', error);
+    }
   };
 
   const fetchProducts = async () => {
@@ -60,37 +95,57 @@ const DataTable: React.FC = () => {
     setDeleteModalOpen(true);
   };
 
-  const handleDeleteConfirm = async () => {
-    if (productToDelete) {
-      await deleteProduct(productToDelete.id);
-    }
-  };
-
   const saveProduct = async (values: any) => {
     try {
       setSaveLoading(true);
       await ProductService.update(currentProduct.id, values);
-      setEditModalOpen(false);
+      setIsModalOpen(false);
       await fetchProducts();
     } finally {
       setSaveLoading(false);
     }
   }
 
-  const handleMenuClick = async (record: ProductType, key: string) => {
+  const createProduct = async (values: any) => {
     try {
-      if (key === 'edit') {
-        handleEditClick(record);
-      } else if (key === 'delete') {
-        showDeleteConfirm(record);
-      }
-    } catch (error) {
-      message.error('Erro ao executar ação');
-      console.error('Error:', error);
+      setSaveLoading(true);
+      await ProductService.create(values);
+      setIsModalOpen(false);
+      await fetchProducts();
+    } finally {
+      setSaveLoading(false);
     }
-  };
+  }
 
   const columns: TableProps<ProductType>['columns'] = [
+    {
+      title: 'Imagem',
+      dataIndex: 'image',
+      key: 'image',
+      width: 70,
+      render: (image: string, record: ProductType) => (
+        <div className='product-image-cell'>
+          {image ? (
+            <Image
+              src={image}
+              alt={record.name}
+              className="product-image"
+              preview={{
+                maskClassName: 'custom-image-mask',
+                mask: (
+                  <span>
+                    <EyeOutlined /> Visualizar
+                  </span>
+                )
+
+              }}
+            />
+          ) : (
+            <div className='product-image-placeholder'>Sem imagem</div>
+          )}
+        </div>
+      ),
+    },
     {
       title: 'Nome',
       dataIndex: 'name',
@@ -179,12 +234,13 @@ const DataTable: React.FC = () => {
         loading={deleteLoading}
       />
 
-      <EditProductModal
-        open={editModalOpen}
-        onCancel={() => setEditModalOpen(false)}
-        onSave={saveProduct}
+      <ProductModal
+        open={isModalOpen}
+        onCancel={handleModalClose}
+        onSave={isCreating ? createProduct : saveProduct}
         initialValues={currentProduct}
         loading={saveLoading}
+        isCreating={isCreating}
       />
     </>
   );

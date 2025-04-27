@@ -25,9 +25,9 @@ const Header = () => {
           </li>
           <li id="icons">
             <div className="icons-wrapper">
-              <a href="/cart" aria-label="Carrinho" title="Carrinho">
+              {/*<a href="/cart" aria-label="Carrinho" title="Carrinho">
                 <LuShoppingBag className="cart-icon" />
-              </a>
+              </a>*/}
               <Link to={"/login"} aria-label="Login" title="Login">
                 <LuUserRound className="user-icon" />
               </Link>
@@ -35,12 +35,12 @@ const Header = () => {
           </li>
         </ul>
       </div>
-      <Navbar />
+      {/*<Navbar />*/}
     </header>
   );
 };
 
-const Navbar = () => {
+{/*const Navbar = () => {
   return (
     <nav>
       <ul className="navbar">
@@ -52,6 +52,6 @@ const Navbar = () => {
       </ul>
     </nav>
   );
-};
+};*/}
 
 export default Header;

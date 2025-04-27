@@ -3,4 +3,5 @@ export declare class UpdateProductDto {
     price?: number;
     quantity?: number;
     categories?: string[];
+    image?: string;
 }

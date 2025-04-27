@@ -11,6 +11,44 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
+.logout-container {
+  position: absolute;
+  bottom: 64px;
+  left: 0;
+  right: 0;
+  width: 100% !important;
+  height: 64px;
+  background: transparent;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.logout-button {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.logout-button .anticon {
+  color: rgba(255, 255, 255, 0.65) !important;
+  transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
+}
+
+.logout-button:hover .anticon {
+  color: rgba(255, 255, 255, 0.9) !important;
+  transform: scale(1.05);
+}
+
 .collapse-container {
   position: absolute;
   bottom: 0;

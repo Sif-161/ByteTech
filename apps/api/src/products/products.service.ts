@@ -31,7 +31,8 @@ export class ProductsService {
             quantity: Number(product.quantity),
             categories: Array.isArray(product.categories)
                 ? product.categories
-                : [product.categories]
+                : [product.categories],
+            image: product.image || null,
         };
 
         const docRef = await this.db.collection('products').add(productData);
@@ -46,29 +47,35 @@ export class ProductsService {
             throw new Error('Product not found');
         }
     
-        const updateData: any = {
-            ...updateProductDto,
-            updatedAt: admin.firestore.FieldValue.serverTimestamp()
-        };
+        const updateData: any = {};
     
-        if (updateData.price !== undefined) {
-            updateData.price = Number(updateData.price);
+        if (updateProductDto.price !== undefined) {
+            updateData.price = Number(updateProductDto.price);
         }
-        if (updateData.quantity !== undefined) {
-            updateData.quantity = Number(updateData.quantity);
+        if (updateProductDto.quantity !== undefined) {
+            updateData.quantity = Number(updateProductDto.quantity);
         }
-        if (updateData.categories !== undefined) {
-            updateData.categories = Array.isArray(updateData.categories)
-                ? updateData.categories
-                : [updateData.categories];
+        if (updateProductDto.categories !== undefined) {
+            updateData.categories = Array.isArray(updateProductDto.categories)
+                ? updateProductDto.categories
+                : [updateProductDto.categories];
         }
-    
-        await productRef.update(updateData);
-        
+        if (updateProductDto.image !== undefined) {
+            updateData.image = updateProductDto.image;
+        }
+
+        updateData.updatedAt = admin.firestore.FieldValue.serverTimestamp();
+
+        if (Object.keys(updateData).length > 1) {
+            await productRef.update(updateData);
+        } else {
+            console.warn('Nenhum dado válido para atualização foi fornecido');
+        }
+
+        const updatedDoc = await productRef.get();
         return { 
             id,
-            ...updateData,
-            updatedAt: new Date().toISOString()
+            ...updatedDoc.data(),
         };
     }
 }

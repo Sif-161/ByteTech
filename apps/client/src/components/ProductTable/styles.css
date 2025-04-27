@@ -1,0 +1,108 @@
+.ant-table {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.ant-table-cell {
+    padding: 12px 16px;
+}
+
+.product-image-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 0;
+}
+
+.product-image {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 3px;
+    border: 1px solid #f0f0f0;
+    background-color: #fafafa;
+}
+
+.product-image-placeholder {
+    width: 40px;
+    height: 40px;
+    font-size: 10px;
+    background-color: #f5f5f5;
+}
+
+.custom-image-mask {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 2px;
+    padding: 2px 8px;
+    transition: all 0.3s;
+}
+
+.ant-image-mask:hover {
+    opacity: 0.9;
+}
+
+.ant-image-mask-info {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.product-name {
+    white-space: normal;
+    word-wrap: break-word;
+    line-height: 1.4;
+    font-size: 14px;
+}
+
+.product-name div {
+    margin-bottom: 2px;
+}
+
+.product-price {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.product-quantity {
+    font-weight: 500;
+    color: #52c41a;
+}
+
+.product-quantity.low-stock {
+    color: #faad14;
+}
+
+.custom-tag {
+    margin-right: 4px;
+}
+
+.ant-spin-nested-loading {
+    min-height: 200px;
+}
+
+.ant-dropdown-trigger {
+    padding: 0 8px;
+}
+
+.table-actions a:last-child {
+    margin-right: 0;
+    color: #ff4d4f;
+}
+
+.ant-dropdown-menu {
+    min-width: 120px;
+}
+
+.ant-table-tbody>tr>td {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.ant-table-thead>tr>th,
+.ant-table-tbody>tr>td {
+    padding: 12px 8px;
+}

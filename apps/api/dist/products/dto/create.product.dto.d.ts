@@ -3,4 +3,5 @@ export declare class CreateProductDto {
     price: number;
     quantity: number;
     categories: string[];
+    image?: string;
 }

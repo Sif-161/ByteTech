@@ -12,17 +12,13 @@ export declare class ProductsController {
         price: number;
         quantity: number;
         categories: string[];
+        image: string | null;
         id: string;
     }>;
     remove(id: string): Promise<{
         success: boolean;
     }>;
     update(id: string, updateProductDto: UpdateProductDto): Promise<{
-        updatedAt: FirebaseFirestore.FieldValue;
-        name?: string;
-        price?: number;
-        quantity?: number;
-        categories?: string[];
         id: string;
     }>;
 }

@@ -11,4 +11,5 @@ export declare class AuthController {
         message: string;
         user: any;
     }>;
+    logout(request: any): Promise<any>;
 }

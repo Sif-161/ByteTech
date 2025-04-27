@@ -38,6 +38,21 @@ let AuthController = class AuthController {
         const user = await this.authService.register(registerDto);
         return { message: 'Usuário cadastrado com sucesso', user };
     }
+    async logout(request) {
+        const token = request.headers.authorization?.split('Bearer ')[1];
+        if (!token) {
+            throw new common_1.UnauthorizedException('Token não fornecido');
+        }
+        try {
+            const decodedToken = await this.authService.verifyToken(token);
+            const uid = decodedToken.uid;
+            const result = await this.authService.logout(uid);
+            return result;
+        }
+        catch (error) {
+            throw new common_1.UnauthorizedException('Erro ao realizar logout: ' + error.message);
+        }
+    }
 };
 exports.AuthController = AuthController;
 __decorate([
@@ -54,6 +69,13 @@ __decorate([
     __metadata("design:paramtypes", [register_dto_1.RegisterDto]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "register", null);
+__decorate([
+    (0, common_1.Post)('logout'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "logout", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [auth_service_1.AuthService])

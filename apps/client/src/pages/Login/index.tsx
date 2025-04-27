@@ -45,20 +45,21 @@ const Login: React.FC = () => {
           >
             <Input prefix={<LockOutlined />} type="password" placeholder="Senha" />
           </Form.Item>
-          <Form.Item>
+
+          {/* <Form.Item>
             <Flex justify="space-between" align="center">
               <Form.Item name="remember" valuePropName="checked" noStyle>
                 <Checkbox>Lembre de mim</Checkbox>
               </Form.Item>
               <a href="">Esqueceu sua senha</a>
             </Flex>
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item>
             <Button block type="primary" htmlType="submit" loading={loading}>
               Login
             </Button>
-            ou <Link to={'/register'}>Cadastre-se agora!</Link>
+            {/* ou <Link to={'/register'}>Cadastre-se agora!</Link> */}
           </Form.Item>
         </Form>
       </div>

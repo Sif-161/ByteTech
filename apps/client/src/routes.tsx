@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import { ProtectedRoute } from "./protectedRoute";
 
 function MainRoutes() {
     return (
@@ -10,7 +11,10 @@ function MainRoutes() {
             <Route path="/" element={<Home />}></Route>
             <Route path="/login" element={<Login />}></Route>
             <Route path="/register" element={<Register />}></Route>
-            <Route path="/dashboard" element={<Dashboard />}></Route>
+
+            <Route element={<ProtectedRoute />}>
+                <Route path="/dashboard" element={<Dashboard />}></Route>
+            </Route>
         </Routes>
     );
 }

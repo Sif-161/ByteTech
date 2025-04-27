@@ -1,16 +1,45 @@
 
 > api@0.0.1 test
-> jest
+> jest --verbose
 
-PASS src/app.controller.spec.ts (14.918 s)
-PASS src/test/auth.service.spec.ts (14.941 s)
-PASS src/test/auth.register.service.spec.ts (14.948 s)
-PASS src/test/auth.controller.spec.ts (16.1 s)
-PASS src/test/auth.register.controller.spec.ts (16.114 s)
-PASS src/test/products.controller.spec.ts (17.801 s)
+PASS src/app.controller.spec.ts (24.947 s)
+  AppController
+    root
+      √ should return "Hello World!" (50 ms)
 
-Test Suites: 6 passed, 6 total
-Tests:       14 passed, 14 total
+PASS src/test/products/products.service.spec.ts (25.012 s)
+  ProductsService
+    √ Deve retornar uma lista de produtos (58 ms)
+    √ Deve remover um produto existente (10 ms)
+    √ Deve criar um novo produto com dados formatados (6 ms)
+    √ Deve criar produtos mantendo categorias como array quando fornecido (7 ms)
+
+PASS src/test/auth/auth.service.spec.ts (25.02 s)
+  AuthService
+    √ deve registrar usuários com dados validos (65 ms)
+    √ deve lançar umm erro para email duplicado (45 ms)
+    √ deve lançar um erro para uma senha fraca (8 ms)
+    √ deve validar um token de usuário (6 ms)
+    √ deve lançar erro se o token for inválido (6 ms)
+
+PASS src/test/products/products.controller.spec.ts (26.275 s)
+  ProductsController
+    √ Deve retornar todos os produtos (22 ms)
+    √ Deve criar um produto (4 ms)
+    √ Deve remover um produto existente (3 ms)
+    √ Deve atualizar um produto existente (3 ms)
+    √ Deve validar o ID como UUID (4 ms)
+
+PASS src/test/auth/auth.controller.spec.ts (26.288 s)
+  AuthController
+    √ Deve autenticar um usuário com um token válido (22 ms)
+    √ Deve retornar erro se o token não for enciado (20 ms)
+    √ Deve registrar um novo usário com dados válidos (7 ms)
+    √ Deeve retornar erro quando o serviço falhar (4 ms)
+    √ Deve retornar erro específico para email já cadastrado (3 ms)
+
+Test Suites: 5 passed, 5 total
+Tests:       20 passed, 20 total
 Snapshots:   0 total
-Time:        18.683 s, estimated 27 s
+Time:        27.465 s
 Ran all test suites.

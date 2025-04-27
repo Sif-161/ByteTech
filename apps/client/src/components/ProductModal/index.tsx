@@ -1,40 +1,43 @@
 import React from 'react';
 import { Modal } from 'antd';
-import ProductEditForm from '../EditForm';
+import ProductForm from '../ProductForm';
 import "./styles.css"
 
-interface EditProductModalProps {
+interface ProductModalProps {
     open: boolean;
     onCancel: () => void;
     onSave: (values: any) => void;
     initialValues?: any;
     loading?: boolean;
+    isCreating?: boolean;
 }
 
-const EditProductModal: React.FC<EditProductModalProps> = ({
+const ProductModal: React.FC<ProductModalProps> = ({
     open,
     onCancel,
     onSave,
     initialValues,
     loading = false,
+    isCreating = false,
 }) => {
     return (
         <Modal
-            title="Editar Produto"
+            title={isCreating ? "Criar produto" : "Editar produto"}
             open={open}
             onCancel={onCancel}
             footer={null}
             width={800}
             destroyOnClose
         >
-            <ProductEditForm
+            <ProductForm
                 initialValues={initialValues}
                 onSave={onSave}
                 onCancel={onCancel}
-                loading={loading} 
+                loading={loading}
+                isCreating={isCreating} 
             />
         </Modal>
     );
 };
 
-export default EditProductModal;
+export default ProductModal;
